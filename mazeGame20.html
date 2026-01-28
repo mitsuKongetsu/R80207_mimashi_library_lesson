@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>20x20迷路ゲーム</title>
+  <style>
+    canvas { border: 2px solid #333; background: #f0f0f0; }
+  </style>
+</head>
+<body>
+<!-- canvasの大きさはJavaScriptで設定 -->
+<!-- <canvas id="maze" width="600" height="600"></canvas> -->
+<canvas id="maze"></canvas>
+<script>
+const canvas = document.getElementById("maze");
+const ctx = canvas.getContext("2d");
+
+const tileSize = 30;
+canvas.width = tileSize * 20;
+canvas.height = tileSize * 20;
+
+// 迷路のデータ配列 (1: 壁, 0: 通路)
+const maze = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+  [1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,1,0,1],
+  [1,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
+  [1,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
+  [1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
+  [1,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,1],
+  [1,0,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1],
+  [1,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,1,0,1],
+  [1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1],
+  [1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
+  [1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1],
+  [1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,1],
+  [1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1],
+  [1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1],
+  [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1],
+  [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+  [1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+let player = { x: 1, y: 1 };
+
+// 迷路を描画
+function drawMaze() {
+  for (let y = 0; y < maze.length; y++) {
+    for (let x = 0; x < maze[y].length; x++) {
+      if (maze[y][x] == 0) {
+          ctx.fillStyle = "#fff";
+      }
+      if (maze[y][x] == 1) {
+          ctx.fillStyle = "#444";
+      }
+      // ctx.fillStyle = maze[y][x] === 1 ? "#444" : "#fff";
+      ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    }
+  }
+  ctx.fillStyle = "blue";
+  ctx.beginPath();
+  ctx.arc(player.x * tileSize + tileSize/2, player.y * tileSize + tileSize/2, tileSize/3, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function movePlayer(dx, dy) {
+  const newX = player.x + dx;
+  const newY = player.y + dy;
+  if (maze[newY][newX] === 0) {
+    player.x = newX;
+    player.y = newY;
+    drawMaze();
+  }
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") movePlayer(0, -1);
+  if (e.key === "ArrowDown") movePlayer(0, 1);
+  if (e.key === "ArrowLeft") movePlayer(-1, 0);
+  if (e.key === "ArrowRight") movePlayer(1, 0);
+});
+
+drawMaze();
+</script>
+</body>
+</html>
