@@ -8,9 +8,8 @@
   </style>
 </head>
 <body>
-<!-- canvasの大きさはJavaScriptで設定 -->
-<!-- <canvas id="maze" width="600" height="600"></canvas> -->
 <canvas id="maze"></canvas>
+<!-- <audio id=“goalSound” src=“goal.mp3” preload=”auto”></audio> -->
 <script>
 const canvas = document.getElementById("maze");
 const ctx = canvas.getContext("2d");
@@ -40,6 +39,7 @@ const maze = [
   [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1],
   [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
   [1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1],
+  //[1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1],
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
@@ -50,16 +50,29 @@ function drawMaze() {
   for (let y = 0; y < maze.length; y++) {
     for (let x = 0; x < maze[y].length; x++) {
       if (maze[y][x] == 0) {
-          ctx.fillStyle = "#fff";
+          ctx.fillStyle = "#ffffff";
       }
       if (maze[y][x] == 1) {
-          ctx.fillStyle = "#444";
+        ctx.fillStyle = "#444444";
       }
-      // ctx.fillStyle = maze[y][x] === 1 ? "#444" : "#fff";
+      /*
+      if (maze[y][x] == 5) {
+        ctx.fillStyle = "green";
+      }
+      // ゴールの “G” を描画
+      ctx.fillStyle = "green";
+      ctx.font = `${tileSize * 0.6}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("G", 18 * tileSize + tileSize / 2, 18 * tileSize + tileSize / 2);
+      */
       ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
     }
   }
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "silver";
+  /* red: レッド, blue: ブルー,green: グリーン,yellow: イエロー, orange: オレンジ
+     purple: ピンク, cyan: シアン, magenta: マゼンティ,lime: ライム
+  */
   ctx.beginPath();
   ctx.arc(player.x * tileSize + tileSize/2, player.y * tileSize + tileSize/2, tileSize/3, 0, Math.PI * 2);
   ctx.fill();
@@ -72,6 +85,16 @@ function movePlayer(dx, dy) {
     player.x = newX;
     player.y = newY;
     drawMaze();
+  }
+  // ゴール判定
+  if (player.x === 18 && player.y === 18) {
+    //document.getElementById("goalSound").play();
+    setTimeout(() => {
+      alert("ゴールしました！");
+      player.x = 1;
+      player.y = 1;
+      drawMaze();
+    }, 100);
   }
 }
 
